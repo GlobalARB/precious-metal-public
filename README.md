@@ -28,7 +28,13 @@ A comprehensive analysis of the gold-silver relationship over ~25 years, from ex
 
 9. **Pairs Strategy (Baseline)** — Cointegration-based pairs trading: expanding-window hedge ratio (log gold ~ beta × log silver), z-score entry/exit (±2σ entry, ±0.5σ exit), correlation regime filter (126d window, min 0.6), vol-targeting (10% ann target), 1 bps transaction costs per leg, weekly Friday execution, 1-day execution lag.
 
-10. **Walk-Forward Backtest** — 5-year train / 1-year test walk-forward grid search over hedge-ratio mode, z-score window, entry/exit thresholds, correlation filter, and target vol. No lookahead: params selected on training data only, applied out-of-sample. Rolling Sharpe chart.
+10. **Walk-Forward Backtest** — 5-year train / 1-year test walk-forward grid search over hedge-ratio mode, z-score window, entry/exit thresholds, correlation filter, and target vol. No lookahead: params selected on training data only, applied out-of-sample. Includes partial final fold to cover trailing data through present. Rolling Sharpe chart.
+
+11. **2025-2026 Precious Metals Rally** — Deep dive into the extraordinary rally: gold +89%, silver +174%, ratio collapsing from 90 to 62. Normalized price charts, rolling 21-day correlation, monthly returns breakdown.
+
+12. **Current Strategy Signal** — Live readout of the pairs strategy: current z-score, position direction, hedge ratio, correlation filter status, recent 63-day performance, and zoom-in charts from 2024 to present.
+
+13. **Conclusion** — Key findings, honest assessment of OOS pairs performance (−0.27% CAGR), overlay diversification value (max DD reduced from −45% to −36%), and limitations.
 
 ## Data Requirements
 
@@ -63,6 +69,11 @@ Run cells sequentially from the top. The first code cell downloads all price dat
 - Fixed `ddof=0` → `ddof=1` for sample standard deviation
 - Consistent strategy column names across all cells
 - Improved Sharpe calculation: CAGR / annualized vol (not mean/std × √252)
+- **~100× speedup** on walk-forward via vectorized expanding/anchored OLS (cumulative sums vs sklearn loop)
+- Walk-forward partial final fold to cover March 2025 → March 2026 (no more gap in recent data)
+- Added 2025-2026 rally analysis and current strategy signal sections
+- DX-Y.NYB (delisted) replaced with UUP (Invesco DB US Dollar Bull ETF)
+- Fixed `dropna(how='any')` silently killing all rows when any macro ticker had NaN
 
 ## Dependencies
 
